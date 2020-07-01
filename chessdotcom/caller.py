@@ -6,6 +6,7 @@ from datetime import datetime
 
 from chessdotcom.errors import ChessDotComError
 from chessdotcom.response_parser import ChessDotComResponse
+from chessdotcom.response_objects import LiveTeamMatchInfo
 
 
 class _internal:
@@ -292,7 +293,7 @@ def get_team_match_board(match_id: int, board_num: int) -> 'ChessDotComResponse'
     return ChessDotComResponse(response_data = r.data)
 
 
-def get_team_match_live(match_id: int) -> 'ChessDotComResponse':
+def get_team_match_live(match_id: int) -> 'LiveTeamMatchInfo':
     """Public method that returns details
     about a team match and players playing that match
 
@@ -300,7 +301,8 @@ def get_team_match_live(match_id: int) -> 'ChessDotComResponse':
         match_id -- the id of the match
     """
     r = _internal.do_get_request(path = f"/match/live/{match_id}")
-    return ChessDotComResponse(response_data = r.data)
+    response = ChessDotComResponse(response_data = r.data)
+    return LiveTeamMatchInfo._create_from_dict(response.json)
 
 
 def get_team_match_live_board(match_id: int, board_num: int) -> 'ChessDotComResponse':
